@@ -27,7 +27,7 @@ jobs:
           cd ArdPicProg
           g++ -std=gnu++11 -O2 \
             hexfile.cpp main.cpp serialport.cpp serialport_win.cpp \
-            -static-libgcc -static-libstdc++ \
+            -static -static-libgcc -static-libstdc++ \
             -o ardpicprog.exe
 
       - name: Upload EXE
