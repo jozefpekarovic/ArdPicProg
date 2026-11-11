@@ -1,0 +1,37 @@
+
+name: Build ArdPicProg Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Download source code
+        uses: actions/checkout@v4
+
+      - name: Install Windows C++ compiler
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: mingw-w64-ucrt-x86_64-gcc
+
+      - name: Compile ArdPicProg
+        shell: msys2 {0}
+        run: |
+          cd ArdPicProg
+          g++ -std=gnu++11 -O2 \
+            hexfile.cpp main.cpp serialport.cpp serialport_win.cpp \
+            -static-libgcc -static-libstdc++ \
+            -o ardpicprog.exe
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: ArdPicProg-Windows
+          path: ArdPicProg/ardpicprog.exe
